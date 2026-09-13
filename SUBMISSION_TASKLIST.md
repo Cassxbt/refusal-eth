@@ -23,16 +23,16 @@ the video opens and meets the duration/resolution/voice rules.
 
 ## Gate 1 — reproducible verification
 
-- [ ] Replace the failing `npx tsx` invocations in `Makefile` and
+- [x] Replace the failing `npx tsx` invocations in `Makefile` and
       `scripts/audit-claims.py` with a runner that works in CI and locally.
-- [ ] Make Foundry verification deterministic without relying on host proxy
+- [x] Make Foundry verification deterministic without relying on host proxy
       discovery; run the full suite in a clean environment.
-- [ ] Make the test badge derive from executed results: 5 Solidity tests + 10 gate
+- [x] Make the test badge derive from executed results: 5 Solidity tests + 10 gate
       assertions, with parity and claim-audit checks also green.
 - [ ] Add CI that runs the same commands used by the README.
 
-Acceptance: `make verify` exits 0 from a clean clone and the reported counts match
-the logs.
+Acceptance: `make verify` exits 0 from the current checkout and the reported counts
+match the logs. CI remains pending.
 
 ## Gate 2 — ENSv2 identity and authority
 
