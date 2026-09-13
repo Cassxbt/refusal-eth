@@ -40,7 +40,10 @@ export function evaluatePolicyInEnclave(
     policy.perTxLimitUSDC < 0 ||
     !Number.isFinite(policy.spentTodayUSDC) ||
     policy.spentTodayUSDC < 0 ||
-    !Array.isArray(policy.allowlist)
+    !Array.isArray(policy.allowlist) ||
+    policy.allowlist.some((entry) => typeof entry !== "string") ||
+    typeof intent.fromENS !== "string" ||
+    typeof intent.revoked !== "boolean"
   ) {
     return { decision: "REFUSE", reasonCode: "REF-02 SEALED_LIMIT_BREACH" };
   }

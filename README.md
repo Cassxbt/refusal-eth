@@ -1,6 +1,6 @@
 # REFUSAL.eth — deny-by-default firewall for AI agents
 
-![Tests](https://img.shields.io/badge/tests-24%20passing-10b981)
+![Tests](https://img.shields.io/badge/tests-26%20passing-10b981)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Chain](https://img.shields.io/badge/chain-Sepolia%2011155111-1f1f23)
 
@@ -57,9 +57,9 @@ Gate order (fixed): REVOKED → ALLOWLIST → PER-TX → DAILY. Non-allowlisted 
 | Ledger Ring scoped sign | ADAPTER PLANNED, demo uses Privy/local — no hardware for `ring init`, never faked as Ring tx |
 | LLM agent | Thin untrusted demo harness, labeled |
 
-## Tests (24 passing — `make verify` fails if this drifts)
+## Tests (26 passing — `make verify` fails if this drifts)
 - `contracts/test/RefusalGateway.t.sol` — 11 forge tests: deadline+nonce-bound verdicts, replay/expiry/invalid-key/empty-name reverts, case-insensitive revocation, and legacy selector disablement.
-- `cre-workflow/test/gate.test.ts` — 13 asserts: ALLOW, REF-01/02/03, frozen order (allowlist before limits, revoked first), boundary (amount == limit → ALLOW), case-insensitive allowlist, and malformed-number refusal.
+- `cre-workflow/test/gate.test.ts` — 15 asserts: ALLOW, REF-01/02/03, frozen order (allowlist before limits, revoked first), boundary (amount == limit → ALLOW), case-insensitive allowlist, and malformed-input refusal.
 - `cre-workflow/test/parity.ts` — web mirror == canonical gate on 20/20 cases.
 - `cre-workflow/test/web-validation.ts` — strict address and integer amount validation, including boolean, exponent, fractional, NaN, and unsafe-number rejection.
 - `scripts/audit-claims.py` — badge count == executed, LIVE claims need evidence, no dead code.

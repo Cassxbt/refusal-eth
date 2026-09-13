@@ -37,5 +37,7 @@ check("zero amount allowlisted → ALLOW", gate({ fromENS: F, to: ALLOW[0], amou
 check("NaN amount → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: Number.NaN, revoked: false }, policy).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
 check("negative amount → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: -1, revoked: false }, policy).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
 check("invalid policy limit → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: 1, revoked: false }, { ...policy, perTxLimitUSDC: Number.NaN }).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
+check("malformed allowlist → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: 1, revoked: false }, { ...policy, allowlist: [123 as unknown as string] }).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
+check("missing revoked flag → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: 1 } as never, policy).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
 
 console.log(`\nPASS: ${n} gate asserts`);
