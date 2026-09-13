@@ -34,5 +34,8 @@ check("revoked + non-allowlisted → REF-01 (order)", gate({ fromENS: F, to: OTH
 check("allowlist case-insensitive", gate({ fromENS: F, to: ALLOW[0].toUpperCase(), amountUSDC: 2, revoked: false }, policy).decision === "ALLOW");
 // Zero/negative amounts still evaluate (route validates; gate is total)
 check("zero amount allowlisted → ALLOW", gate({ fromENS: F, to: ALLOW[0], amountUSDC: 0, revoked: false }, policy).decision === "ALLOW");
+check("NaN amount → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: Number.NaN, revoked: false }, policy).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
+check("negative amount → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: -1, revoked: false }, policy).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
+check("invalid policy limit → REF-02", gate({ fromENS: F, to: ALLOW[0], amountUSDC: 1, revoked: false }, { ...policy, perTxLimitUSDC: Number.NaN }).reasonCode === "REF-02 SEALED_LIMIT_BREACH");
 
 console.log(`\nPASS: ${n} gate asserts`);

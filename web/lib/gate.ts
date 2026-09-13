@@ -29,6 +29,21 @@ export function evaluatePolicyInEnclave(
   intent: Intent,
   policy: SealedPolicy,
 ): { decision: Decision; reasonCode: ReasonCode | "ALLOW" } {
+  // Keep the mirror fail-closed with the CRE logic at the enclave boundary.
+  if (
+    typeof intent.to !== "string" ||
+    !Number.isFinite(intent.amountUSDC) ||
+    intent.amountUSDC < 0 ||
+    !Number.isFinite(policy.dailyLimitUSDC) ||
+    policy.dailyLimitUSDC < 0 ||
+    !Number.isFinite(policy.perTxLimitUSDC) ||
+    policy.perTxLimitUSDC < 0 ||
+    !Number.isFinite(policy.spentTodayUSDC) ||
+    policy.spentTodayUSDC < 0 ||
+    !Array.isArray(policy.allowlist)
+  ) {
+    return { decision: "REFUSE", reasonCode: "REF-02 SEALED_LIMIT_BREACH" };
+  }
   if (intent.revoked) return { decision: "REFUSE", reasonCode: "REF-01 REVOKED_NAME" };
   if (!policy.allowlist.map((a) => a.toLowerCase()).includes(intent.to.toLowerCase()))
     return { decision: "REFUSE", reasonCode: "REF-03 ALLOWLIST_MISS" };

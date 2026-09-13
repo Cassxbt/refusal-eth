@@ -4,6 +4,7 @@ import { sepolia } from "viem/chains";
 import { normalize } from "viem/ens";
 import { evaluatePolicyInEnclave } from "@/lib/gate";
 import { demoPolicy, isRevoked, newProofId, saveProof } from "@/lib/store";
+import { parseStrictAddress, parseStrictAmount } from "@/lib/validation";
 
 const RPC = process.env.SEPOLIA_RPC_URL ?? "https://ethereum-sepolia-rpc.publicnode.com";
 
@@ -14,10 +15,10 @@ const RPC = process.env.SEPOLIA_RPC_URL ?? "https://ethereum-sepolia-rpc.publicn
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const from = typeof body?.from === "string" ? body.from : "";
-  const to = typeof body?.to === "string" ? body.to : "";
-  const amount = Number(body?.amount);
-  if (!from || !to || !Number.isFinite(amount) || amount <= 0)
-    return NextResponse.json({ error: "need {from: ENS, to: 0x.., amount: number}" }, { status: 400 });
+  const to = parseStrictAddress(body?.to);
+  const amount = parseStrictAmount(body?.amount);
+  if (!from || !to || amount === null)
+    return NextResponse.json({ error: "need {from: ENS, to: valid checksummed 0x address, amount: positive USDC}" }, { status: 400 });
 
   let fromENS: string;
   try {
@@ -27,10 +28,19 @@ export async function POST(req: Request) {
   }
 
   const client = createPublicClient({ chain: sepolia, transport: http(RPC) });
-  const [address, resolver] = await Promise.all([
-    client.getEnsAddress({ name: fromENS }).catch(() => null),
-    client.getEnsResolver({ name: fromENS }).catch(() => null),
-  ]);
+  let address: `0x${string}` | null;
+  let resolver: `0x${string}` | null;
+  try {
+    [address, resolver] = await Promise.all([
+      client.getEnsAddress({ name: fromENS }),
+      client.getEnsResolver({ name: fromENS }),
+    ]);
+  } catch {
+    // An unavailable ENS read must never become an ALLOW decision.
+    return NextResponse.json({ error: "ENS resolution unavailable" }, { status: 502 });
+  }
+  if (!address)
+    return NextResponse.json({ error: "ENS name has no address record" }, { status: 422 });
   const revoked = isRevoked(fromENS);
   const { decision, reasonCode } = evaluatePolicyInEnclave(
     { fromENS, to, amountUSDC: amount, revoked },

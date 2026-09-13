@@ -3,6 +3,7 @@
 /// and serverless instances don't share memory at all. Files survive both
 /// in dev and on a single-host `next start` deploy. Production = KV/DB.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { randomBytes } from "node:crypto";
 import { join } from "node:path";
 import type { Decision, ReasonCode } from "./gate";
 
@@ -93,7 +94,7 @@ export function getProof(id: string): ProofReceipt | undefined {
 }
 
 export function newProofId(): string {
-  return `proof_${Math.random().toString(16).slice(2, 6)}${Date.now().toString(16).slice(-4)}`;
+  return `proof_${randomBytes(16).toString("hex")}`;
 }
 
 /// DEMO sealed policy — constants until CRE Vault secrets land.
