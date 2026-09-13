@@ -1,12 +1,15 @@
 # REFUSAL.eth — deny-by-default firewall for AI agents
 
-![Tests](https://img.shields.io/badge/tests-15%20passing-10b981)
+![Tests](https://img.shields.io/badge/tests-24%20passing-10b981)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Chain](https://img.shields.io/badge/chain-Sepolia%2011155111-1f1f23)
 
 > AI agents holding keys will be prompt-injected into draining themselves, because spending policy lives in readable context and signing is unconditional.
 
-So I built **REFUSAL.eth** — no ALLOW receipt = no signature, ever. Policy evaluates inside Chainlink CRE TEE, identity is an ENSv2 agent namespace, signing gated by policy + human quorum (Privy).
+So I built **REFUSAL.eth** — no ALLOW receipt = no signature, ever. The
+submission target is a Chainlink CRE TEE policy gate, an ENSv2 agent
+namespace, and a Privy human-quorum signer; the honesty table below separates
+implemented local behavior from evidence-backed live integrations.
 
 Pipeline: `MINT → SEAL → RESOLVE → EVALUATE → LOCK-SIGN`
 
@@ -38,19 +41,27 @@ Gate order (fixed): REVOKED → ALLOWLIST → PER-TX → DAILY. Non-allowlisted 
 - `web/` — Next.js proof API + /proof page
 - `signer/` — pluggable signer (privy/local/ledger-ring stub)
 
+## Audit artifacts
+- [BUILD_SPEC.md](BUILD_SPEC.md) — frozen architecture and success criteria.
+- [SUBMISSION_TASKLIST.md](SUBMISSION_TASKLIST.md) — prioritized execution and
+  red-team checklist.
+- [AI_DISCLOSURE.md](AI_DISCLOSURE.md) — AI-use attribution and evidence rules.
+
 ## Honesty table (verified 2026-09-13 — no LIVE claims until evidence lands)
 | Claim | Status |
 |---|---|
+| Gateway verdict signature expiry/replay protection | LOCAL — legacy `execute` selector is disabled; use deadline+nonce-bound `executeWithDeadline` |
 | ENSv2 mint/revoke/alias Sepolia | TODO — needs Sepolia txs + `/api/resolve` live, no hard-coded values |
 | CRE `handlerInTee` + CLI sim log | LOCAL GATE ONLY — `cre-workflow/src/sim.ts` 4-case pass; needs real `cre workflow simulate` transcript + binary hash |
 | Privy embedded wallet + policy | TODO — needs funded Sepolia wallet + policy/quorum IDs + tx hash |
 | Ledger Ring scoped sign | ADAPTER PLANNED, demo uses Privy/local — no hardware for `ring init`, never faked as Ring tx |
 | LLM agent | Thin untrusted demo harness, labeled |
 
-## Tests (15 passing — `make verify` fails if this drifts)
-- `contracts/test/RefusalGateway.t.sol` — 5 forge tests: valid verdict executes once, replay reverts, bad verdict reverts, revoked refuses, non-owner revoke reverts.
-- `cre-workflow/test/gate.test.ts` — 10 asserts: ALLOW, REF-01/02/03, frozen order (allowlist before limits, revoked first), boundary (amount == limit → ALLOW), case-insensitive allowlist.
+## Tests (24 passing — `make verify` fails if this drifts)
+- `contracts/test/RefusalGateway.t.sol` — 11 forge tests: deadline+nonce-bound verdicts, replay/expiry/invalid-key/empty-name reverts, case-insensitive revocation, and legacy selector disablement.
+- `cre-workflow/test/gate.test.ts` — 13 asserts: ALLOW, REF-01/02/03, frozen order (allowlist before limits, revoked first), boundary (amount == limit → ALLOW), case-insensitive allowlist, and malformed-number refusal.
 - `cre-workflow/test/parity.ts` — web mirror == canonical gate on 20/20 cases.
+- `cre-workflow/test/web-validation.ts` — strict address and integer amount validation, including boolean, exponent, fractional, NaN, and unsafe-number rejection.
 - `scripts/audit-claims.py` — badge count == executed, LIVE claims need evidence, no dead code.
 
 ## Run locally

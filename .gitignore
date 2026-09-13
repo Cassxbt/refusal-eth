@@ -9,4 +9,7 @@ web/data/proofs/
 web/tsconfig.tsbuildinfo
 *.log
 .DS_Store
-# Submission planning and eligibility artifacts are intentionally public.
+# Internal submission planning and eligibility artifacts stay local.
+/BUILD_SPEC.md
+/SUBMISSION_TASKLIST.md
+/evidence/prize-eligibility.md
