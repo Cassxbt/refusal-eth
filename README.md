@@ -70,4 +70,6 @@ Gate order (fixed): REVOKED → ALLOWLIST → PER-TX → DAILY. Non-allowlisted 
 pnpm i
 pnpm --dir cre-workflow sim
 pnpm --dir web dev
+# Read-only ENSv2 deployment and optional parent-name preflight (never broadcasts)
+node web/scripts/ensv2-preflight.mjs
 ```
