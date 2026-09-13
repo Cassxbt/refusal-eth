@@ -7,7 +7,7 @@ import "../RefusalGateway.sol";
 /// @notice Mirrors the demo claims: valid verdict executes once, anything else refuses.
 contract RefusalGatewayTest is Test {
     RefusalGateway gw;
-    uint256 constant KEY = 0x1234567890123456789012345678901234567890123456789012345678901234;
+    uint256 constant KEY = 0x1234;
     address verdict;
     string constant AGENT = "demo.alice.refusal.eth";
     address constant TO = 0x000000000000000000000000000000000000dEaD;
