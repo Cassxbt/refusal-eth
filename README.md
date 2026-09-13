@@ -25,16 +25,19 @@ Ledger Key Ring: adapter interface-complete (`signer/ledger-ring.ts`), demo uses
 ## Judge path (≤90s, no wallet)
 ```bash
 curl https://refusal-eth.vercel.app/api/health
-curl "https://refusal-eth.vercel.app/api/resolve?name=demo.alice.refusal.eth"
-curl -X POST https://refusal-eth.vercel.app/api/intent -d '{"from":"demo.alice.refusal.eth","to":"0x000000000000000000000000000000000000dEaD","amount":"1000"}'
+curl "https://refusal-eth.vercel.app/api/resolve?name=demo.alice.refusal.eth" # live ENS path; 422 until a real name is configured
+curl -X POST 'https://refusal-eth.vercel.app/api/intent?demo=true' -H 'content-type: application/json' -d '{"from":"demo.alice.refusal.eth","to":"0x000000000000000000000000000000000000dEaD","amount":"1000"}'
 # → {"decision":"REFUSE","reasonCode":"REF-02 SEALED_LIMIT_BREACH"} (allowlisted addr, over limit)
-curl -X POST https://refusal-eth.vercel.app/api/intent -d '{"from":"demo.alice.refusal.eth","to":"0x1111111111111111111111111111111111111111","amount":"1"}'
+curl -X POST 'https://refusal-eth.vercel.app/api/intent?demo=true' -H 'content-type: application/json' -d '{"from":"demo.alice.refusal.eth","to":"0x1111111111111111111111111111111111111111","amount":"1"}'
 # → {"decision":"REFUSE","reasonCode":"REF-03 ALLOWLIST_MISS"}
 curl https://refusal-eth.vercel.app/api/proof/<proofId-from-intent>
 # + open /proof/<proofId-from-intent> → ENS + CRE sim + explorer
 ```
 Gate order (fixed): REVOKED → ALLOWLIST → PER-TX → DAILY. Non-allowlisted `to` returns REF-03 before limits are checked.
 `REF-04 HUMAN_DENIED_TIMEOUT` originates at LOCK-SIGN (Privy quorum/human timeout), not in the enclave.
+
+The `demo=true` query is an explicit synthetic-identity mode for judgeability; it
+does not claim ENS ownership or bypass the default live ENS resolution path.
 
 ## Layout
 - `contracts/` — RefusalGateway.sol (verdict enforcement, revocation root)

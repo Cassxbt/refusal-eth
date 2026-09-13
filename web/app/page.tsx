@@ -24,6 +24,7 @@ export default function Home() {
   const [from, setFrom] = useState(refusalScenario.from);
   const [to, setTo] = useState(refusalScenario.to);
   const [amount, setAmount] = useState(refusalScenario.amount);
+  const [demoMode, setDemoMode] = useState(true);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
   const [result, setResult] = useState<GateResult | null>(null);
@@ -32,6 +33,7 @@ export default function Home() {
     setFrom(scenario.from);
     setTo(scenario.to);
     setAmount(scenario.amount);
+    setDemoMode(true);
     setResult(null);
     setError("");
     setState("idle");
@@ -43,7 +45,7 @@ export default function Home() {
     setResult(null);
     setError("");
     try {
-      const response = await fetch("/api/intent", {
+      const response = await fetch(`/api/intent${demoMode ? "?demo=true" : ""}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ from, to, amount }),
@@ -107,7 +109,7 @@ export default function Home() {
             </div>
             <form onSubmit={evaluate}>
               <div className="form-grid">
-                <div className="field"><label htmlFor="from">Agent ENS name</label><input id="from" value={from} onChange={(event) => setFrom(event.target.value)} placeholder="agent.example.eth" autoComplete="off" required /><span className="field-hint">Resolved on Sepolia before policy evaluation.</span></div>
+                <div className="field"><label htmlFor="from">Agent ENS name</label><input id="from" value={from} onChange={(event) => { setFrom(event.target.value); setDemoMode(false); }} placeholder="agent.example.eth" autoComplete="off" required /><span className="field-hint">{demoMode ? "Deterministic public demo identity; no ENS ownership implied." : "Resolved on Sepolia before policy evaluation."}</span></div>
                 <div className="field"><label htmlFor="to">Destination address</label><input id="to" value={to} onChange={(event) => setTo(event.target.value)} placeholder="0x…" spellCheck={false} required /></div>
                 <div className="field"><label htmlFor="amount">Amount / USDC units</label><input id="amount" value={amount} onChange={(event) => setAmount(event.target.value)} inputMode="numeric" pattern="[1-9][0-9]*" required /></div>
                 <div className="scenario-row" aria-label="Load demo scenarios"><button className="scenario-button" type="button" onClick={() => loadScenario(refusalScenario)}>Load allowlist miss</button><button className="scenario-button" type="button" onClick={() => loadScenario(limitScenario)}>Load limit breach</button></div>

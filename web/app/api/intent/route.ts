@@ -27,20 +27,29 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid from ENS" }, { status: 400 });
   }
 
-  const client = createPublicClient({ chain: sepolia, transport: http(RPC) });
-  let address: `0x${string}` | null;
-  let resolver: `0x${string}` | null;
-  try {
-    [address, resolver] = await Promise.all([
-      client.getEnsAddress({ name: fromENS }),
-      client.getEnsResolver({ name: fromENS }),
-    ]);
-  } catch {
-    // An unavailable ENS read must never become an ALLOW decision.
-    return NextResponse.json({ error: "ENS resolution unavailable" }, { status: 502 });
+  const demoMode = new URL(req.url).searchParams.get("demo") === "true";
+  const isDemoIdentity = fromENS === "demo.alice.refusal.eth";
+  let address: `0x${string}` | null = null;
+  let resolver: `0x${string}` | null = null;
+  if (demoMode) {
+    if (!isDemoIdentity)
+      return NextResponse.json({ error: "demo mode only supports demo.alice.refusal.eth" }, { status: 400 });
+    // Synthetic identity for the public demo; no ENS ownership is implied.
+    address = "0x000000000000000000000000000000000000a11c";
+  } else {
+    const client = createPublicClient({ chain: sepolia, transport: http(RPC) });
+    try {
+      [address, resolver] = await Promise.all([
+        client.getEnsAddress({ name: fromENS }),
+        client.getEnsResolver({ name: fromENS }),
+      ]);
+    } catch {
+      // An unavailable ENS read must never become an ALLOW decision.
+      return NextResponse.json({ error: "ENS resolution unavailable" }, { status: 502 });
+    }
+    if (!address)
+      return NextResponse.json({ error: "ENS name has no address record" }, { status: 422 });
   }
-  if (!address)
-    return NextResponse.json({ error: "ENS name has no address record" }, { status: 422 });
   const revoked = isRevoked(fromENS);
   const { decision, reasonCode } = evaluatePolicyInEnclave(
     { fromENS, to, amountUSDC: amount, revoked },
@@ -58,7 +67,9 @@ export async function POST(req: Request) {
       address,
       resolver,
       revoked,
-      role: "OPERATOR (demo policy — EAC roles land with gateway deploy)",
+      role: demoMode
+        ? "DEMO IDENTITY (synthetic — no ENS ownership implied)"
+        : "OPERATOR (demo policy — EAC roles land with gateway deploy)",
     },
     cre: { engine: "evaluatePolicyInEnclave (web mirror; CRE handlerInTee simulation evidenced separately)", simHash: null, verdictSig: null },
     signer: { kind: "none-yet (Privy adapter TODO)", human: "not-requested", signed: false, txHash: null },
