@@ -1,0 +1,21 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: cre-workflow/package-lock.json
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Install CRE workflow dependencies
+        run: npm ci --prefix cre-workflow
+      - name: Verify policy, parity, contract, and claims
+        run: make verify
