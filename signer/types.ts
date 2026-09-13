@@ -7,6 +7,9 @@ export interface SignRequest {
   amountUSDC: number;
   proofId: string;
   verdictSig: string | null; // null = no ALLOW receipt → must refuse
+  verdictVerified: boolean; // cryptographically verified by the caller
+  userSignature?: string; // Privy user authorization signature
+  idempotencyKey?: string;
 }
 export interface SignResult {
   signed: boolean;
