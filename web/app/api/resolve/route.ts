@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { createPublicClient, http } from "viem";
 import { sepolia } from "viem/chains";
-import { normalize } from "viem/ens";
 import { isRevoked } from "@/lib/store";
+import { canonicalEnsName } from "@/lib/ensv2";
 
 const RPC = process.env.SEPOLIA_RPC_URL ?? "https://ethereum-sepolia-rpc.publicnode.com";
 
@@ -13,17 +13,20 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const raw = searchParams.get("name") ?? "";
   if (!raw) return NextResponse.json({ error: "missing ?name=" }, { status: 400 });
-  let name: string;
-  try {
-    name = normalize(raw);
-  } catch {
-    return NextResponse.json({ error: "invalid ENS name" }, { status: 400 });
-  }
+  const name = canonicalEnsName(raw);
+  if (!name) return NextResponse.json({ error: "invalid ENS name" }, { status: 400 });
   const client = createPublicClient({ chain: sepolia, transport: http(RPC) });
-  const [address, resolver] = await Promise.all([
-    client.getEnsAddress({ name }).catch(() => null),
-    client.getEnsResolver({ name }).catch(() => null),
-  ]);
+  let address: `0x${string}` | null;
+  let resolver: `0x${string}` | null;
+  try {
+    [address, resolver] = await Promise.all([
+      client.getEnsAddress({ name }),
+      client.getEnsResolver({ name }),
+    ]);
+  } catch {
+    return NextResponse.json({ error: "ENS resolution unavailable" }, { status: 502 });
+  }
+  if (!address) return NextResponse.json({ error: "ENS name has no address record" }, { status: 422 });
   const revoked = isRevoked(name);
   return NextResponse.json({
     name,
