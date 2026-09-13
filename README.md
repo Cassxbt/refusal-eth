@@ -30,6 +30,8 @@ curl -X POST 'https://refusal-eth.vercel.app/api/intent?demo=true' -H 'content-t
 # → {"decision":"REFUSE","reasonCode":"REF-02 SEALED_LIMIT_BREACH"} (allowlisted addr, over limit)
 curl -X POST 'https://refusal-eth.vercel.app/api/intent?demo=true' -H 'content-type: application/json' -d '{"from":"demo.alice.refusal.eth","to":"0x1111111111111111111111111111111111111111","amount":"1"}'
 # → {"decision":"REFUSE","reasonCode":"REF-03 ALLOWLIST_MISS"}
+curl -X POST https://refusal-eth.vercel.app/api/execute -H 'content-type: application/json' -d '{"proofId":"<proofId-from-an-ALLOW-intent>"}'
+# → REF-02 until a server-verified CRE verdict is attached; Privy is never called
 curl https://refusal-eth.vercel.app/api/proof/<proofId-from-intent>
 # + open /proof/<proofId-from-intent> → ENS + CRE sim + explorer
 ```
