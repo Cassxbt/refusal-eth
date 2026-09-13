@@ -14,8 +14,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: cre-workflow/package-lock.json
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
       - uses: foundry-rs/foundry-toolchain@v1
       - name: Install CRE workflow dependencies
         run: npm ci --prefix cre-workflow
+      - name: Install web dependencies
+        run: pnpm --dir web install --frozen-lockfile --ignore-scripts
       - name: Verify policy, parity, contract, and claims
         run: make verify
