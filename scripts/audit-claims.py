@@ -22,13 +22,13 @@ def run(cmd: list[str], cwd: Path) -> str:
 
 
 # 1. test counts
-forge_out = run(["forge", "test"], ROOT / "contracts")
+forge_out = run(["forge", "test", "--offline", "--no-auto-detect"], ROOT / "contracts")
 m = re.search(r"(\d+) tests passed", forge_out)
 forge_n = int(m.group(1)) if m else 0
 if forge_n == 0:
     fails.append("forge: 0 tests passed")
 
-gate_out = run(["npx", "tsx", "test/gate.test.ts"], ROOT / "cre-workflow")
+gate_out = run(["node", "--import", "tsx", "test/gate.test.ts"], ROOT / "cre-workflow")
 m = re.search(r"PASS: (\d+) gate asserts", gate_out)
 gate_n = int(m.group(1)) if m else 0
 if gate_n == 0:
@@ -50,7 +50,7 @@ if live_cells:
         fails.append("README claims LIVE but evidence/ has no sim log or tx artifacts")
 
 # 3. parity
-par_out = run(["npx", "tsx", "test/parity.ts"], ROOT / "cre-workflow")
+par_out = run(["node", "--import", "tsx", "test/parity.ts"], ROOT / "cre-workflow")
 if "20/20" not in par_out:
     fails.append(f"mirror parity broken:\n{par_out[-800:]}")
 
