@@ -42,10 +42,10 @@ Gate order (fixed): REVOKED → ALLOWLIST → PER-TX → DAILY. Non-allowlisted 
 - `signer/` — pluggable signer (privy/local/ledger-ring stub)
 
 ## Audit artifacts
-- [BUILD_SPEC.md](BUILD_SPEC.md) — frozen architecture and success criteria.
-- [SUBMISSION_TASKLIST.md](SUBMISSION_TASKLIST.md) — prioritized execution and
-  red-team checklist.
 - [AI_DISCLOSURE.md](AI_DISCLOSURE.md) — AI-use attribution and evidence rules.
+- [SUBMISSION_SPEC.md](SUBMISSION_SPEC.md) — concise public scope and acceptance
+  criteria (internal research notes are excluded).
+- [AI_PROMPTS.md](AI_PROMPTS.md) — sanitized prompt index for reproducibility.
 
 ## Honesty table (verified 2026-09-13 — no LIVE claims until evidence lands)
 | Claim | Status |
