@@ -4,6 +4,30 @@ This is the execution checklist for the current Start Fresh submission candidate
 Nothing is marked complete without an executable test, public proof, or recorded
 artifact. Secrets belong in local/Vercel environment variables only.
 
+## Priority order (red-team blockers)
+
+Do these in order; later gates are not meaningful until the earlier trust
+boundaries are closed.
+
+- **P0 — credential and safety boundary:** revoke/rotate the credentials pasted
+  into chat before use; fail closed on ENS/RPC errors and unknown names;
+  validate recipient addresses and integer token units; reject invalid CRE
+  inputs; prevent unauthenticated un-revoke; reject a zero verdict key; verify
+  signer inputs; add verdict freshness/nonce and canonical ENS identity; make
+  the gateway/Privy path enforce “no valid verdict, no funds movement.”
+- **P1 — submission integrity:** replace file-backed state with durable shared
+  persistence; make daily limits accumulate atomically; use cryptographic proof
+  IDs and independently verifiable receipts; wire real ENSv2, CRE TEE, and
+  Privy integrations; produce transaction and simulation evidence.
+- **P2 — judgeability:** deploy from a clean public clone, publish the evidence
+  and AI/spec artifacts, verify every live route, record sponsor call sites,
+  and produce the human-voiced 2–4 minute walkthrough.
+
+The security-lab regression matrix is part of the sign-off: mixed-case revoke,
+zero-key deployment, stale/replayed/missing/forged verdicts, repeated daily-cap
+requests, RPC failure, unauthorized revoke changes, concurrent persistence,
+proof-ID collision, invalid numeric/address inputs, and malformed signer input.
+
 ## Gate 0 — submission integrity
 
 - [ ] Confirm the project-specific work began after ETHOnline kickoff; preserve the

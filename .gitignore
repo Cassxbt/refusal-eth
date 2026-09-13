@@ -9,6 +9,4 @@ web/data/proofs/
 web/tsconfig.tsbuildinfo
 *.log
 .DS_Store
-# planning docs stay local, never committed
-/BUILD_SPEC.md
-/evidence/prize-eligibility.md
+# Submission planning and eligibility artifacts are intentionally public.
