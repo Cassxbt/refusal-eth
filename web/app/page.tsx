@@ -134,7 +134,7 @@ export default function Home() {
               <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">GATE LOGIC</div><div className="evidence-detail">Frozen order: revoked → allowlist → per-tx → daily.</div></div><span className="evidence-state">TESTED</span></div>
               <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">ENS PRE-FLIGHT</div><div className="evidence-detail">Read-only ENSv2 deployment and fail-closed config checks; no name ownership implied.</div></div><span className="evidence-state readonly">READ-ONLY</span></div>
               <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">CHAINLINK CRE</div><div className="evidence-detail">Official CLI simulation verified; production deployment is not claimed.</div></div><span className="evidence-state simulation">SIMULATION</span></div>
-              <div className="evidence-row"><span className="evidence-dot pending" /><div><div className="evidence-name">PRIVY LOCK-SIGN</div><div className="evidence-detail">SDK present; wallet policy and live signing flow pending.</div></div><span className="evidence-state pending">PENDING</span></div>
+              <div className="evidence-row"><span className="evidence-dot pending" /><div><div className="evidence-name">PRIVY LOCK-SIGN</div><div className="evidence-detail">Wallet, quorum, policy, and Sepolia funding verified; live signing flow pending.</div></div><span className="evidence-state pending">PENDING</span></div>
             </div>
             <p className="micro-note">The honest path is the winning path: every claim maps to a test, receipt, or clearly marked next gate.</p>
           </aside>

@@ -59,7 +59,7 @@ does not claim ENS ownership or bypass the default live ENS resolution path.
 | Gateway verdict signature expiry/replay protection | LOCAL — legacy `execute` selector is disabled; use deadline+nonce-bound `executeWithDeadline` |
 | ENSv2 mint/revoke/alias Sepolia | TODO — needs Sepolia txs + `/api/resolve` live, no hard-coded values |
 | CRE `handlerInTee` + CLI sim log | VERIFIED — official `cre workflow simulate` transcript and binary/config hashes in [`evidence/chainlink-cre-simulation.md`](evidence/chainlink-cre-simulation.md); production deployment remains pending |
-| Privy embedded wallet + policy | ADAPTER READY — current Node SDK request path and fail-closed signer tests are present; funded wallet, policy/quorum IDs, user approval, and tx hash remain pending |
+| Privy embedded wallet + policy | CONFIGURED — wallet, owner quorum, restrictive Sepolia policy, and funded-wallet receipt are verified in [`evidence/privy-flow.md`](evidence/privy-flow.md); live user approval and signed USDC tx remain pending |
 | Ledger Ring scoped sign | ADAPTER PLANNED, demo uses Privy/local — no hardware for `ring init`, never faked as Ring tx |
 | LLM agent | Thin untrusted demo harness, labeled |
 
