@@ -1,8 +1,6 @@
-/// MIRROR of ../../cre-workflow/src/workflow.ts `evaluatePolicyInEnclave`.
-/// Single pure gate; web duplicates it because Next root cannot import outside web/.
-/// Verified identical by agent (outputs compared case-by-case). Merge at SDK wiring:
-///
-///   SDK TODO: wrap with @chainlink/cre-sdk `handlerInTee` + `runtime.getSecret()`.
+/// Web mirror of ../../cre-workflow/src/workflow.ts `evaluatePolicyInEnclave`.
+/// The canonical CRE handler lives in `cre-workflow/tee/workflow.ts`; this
+/// mirror keeps the interactive proof API runnable without a CRE runtime.
 export type Decision = "ALLOW" | "REFUSE";
 export type ReasonCode =
   | "REF-01 REVOKED_NAME"

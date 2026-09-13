@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       revoked,
       role: "OPERATOR (demo policy — EAC roles land with gateway deploy)",
     },
-    cre: { engine: "evaluatePolicyInEnclave (local mirror — handlerInTee sim next)", simHash: null, verdictSig: null },
+    cre: { engine: "evaluatePolicyInEnclave (web mirror; CRE handlerInTee simulation evidenced separately)", simHash: null, verdictSig: null },
     signer: { kind: "none-yet (Privy adapter TODO)", human: "not-requested", signed: false, txHash: null },
     links: {
       ensSepolia: `https://sepolia.etherscan.io/enslookup-search?search=${encodeURIComponent(fromENS)}`,
