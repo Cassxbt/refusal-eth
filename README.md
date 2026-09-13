@@ -78,3 +78,32 @@ pnpm --dir web dev
 # Read-only ENSv2 deployment and optional parent-name preflight (never broadcasts)
 node web/scripts/ensv2-preflight.mjs
 ```
+
+## Privy bootstrap (local-only, no transaction)
+
+The bootstrap utility discovers or creates exactly one active Ethereum wallet
+for a stable `external_id`. It prints only the wallet ID, address, owner ID,
+and policy IDs; the app secret is never written to disk or included in output.
+
+Set the two app credentials in your local process environment, then run:
+
+```bash
+export PRIVY_APP_ID='your-app-id'
+export PRIVY_APP_SECRET='your-app-secret'
+node web/scripts/privy-bootstrap.mjs
+```
+
+Optional configuration is supplied as environment variables:
+
+- `PRIVY_WALLET_EXTERNAL_ID` (default: `refusal-eth-agent-sepolia`)
+- `PRIVY_WALLET_DISPLAY_NAME` (default: `REFUSAL agent — Sepolia`)
+- `PRIVY_OWNER_ID` **or** `PRIVY_POLICY_ID` (attach an already-created Privy owner or policy)
+
+The command is idempotent: rerunning it returns the existing active wallet for
+the same external ID. It never signs, sends, exports, or moves funds. After it
+prints the wallet address, fund it with Sepolia ETH and USDC, then record the
+wallet ID and address in local/Vercel secrets only. Create the policy in Privy
+Dashboard → Wallet infrastructure → Policies with default deny and an allow
+rule restricted to `eth_sendTransaction`, chain `11155111`, and the Sepolia
+USDC contract `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`; copy its policy ID
+before creating a new wallet if you want the policy attached at creation time.
