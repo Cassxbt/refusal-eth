@@ -17,6 +17,7 @@
 html { background: var(--ink); }
 body { margin: 0; color: var(--paper); background: radial-gradient(circle at 82% 4%, rgba(216,255,98,.08), transparent 30rem), linear-gradient(112deg, rgba(121,216,209,.025), transparent 40%), var(--ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 .shell, .receipt-shell { min-height: 100vh; overflow: hidden; }
@@ -37,6 +38,11 @@ button { cursor: pointer; }
 .hero-lede { color: #bdc8bf; font-size: clamp(17px,2vw,22px); line-height: 1.48; max-width: 600px; }
 .hero-lede strong { color: var(--paper); font-weight: 600; }
 .hero-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+.hero-meta { align-items: center; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 12px 18px; margin-top: 28px; max-width: 690px; padding-top: 14px; }
+.hero-meta a { color: var(--acid); font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-decoration: none; text-transform: uppercase; }
+.hero-meta a:hover { text-decoration: underline; }
+.hero-meta-label { color: var(--paper); font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.hero-meta-note { color: var(--muted); font-size: 11px; }
 .button-primary, .button-quiet { border-radius: 3px; display: inline-flex; font-family: var(--font-mono); font-size: 11px; font-weight: 700; gap: 10px; letter-spacing: .08em; padding: 14px 17px; text-decoration: none; text-transform: uppercase; transition: transform 160ms ease, background 160ms ease, border-color 160ms ease; }
 .button-primary { background: var(--acid); color: var(--ink); }
 .button-primary:hover { background: #e6ff9b; transform: translateY(-2px); }
@@ -90,6 +96,7 @@ button { cursor: pointer; }
 .evidence-detail { color: var(--muted); font-size: 12px; line-height: 1.45; margin-top: 5px; }
 .evidence-state { color: var(--acid); font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-align: right; }
 .evidence-state.pending { color: var(--orange); }
+.evidence-state.readonly, .evidence-state.simulation { color: var(--cyan); }
 .micro-note { color: #68746b; font-family: var(--font-mono); font-size: 10px; line-height: 1.5; margin-top: auto; padding-top: 24px; }
 .sequence { border-top: 1px solid var(--line); display: grid; gap: 0; grid-template-columns: repeat(5,1fr); margin-top: 86px; padding-top: 22px; }
 .sequence-step { border-left: 1px solid var(--line); min-height: 86px; padding: 0 17px; }
@@ -107,7 +114,15 @@ button { cursor: pointer; }
 .receipt-summary { align-items: center; display: flex; flex-wrap: wrap; gap: 14px 25px; padding: 22px 0; }
 .receipt-summary strong { font-family: var(--font-mono); font-size: 12px; }
 .receipt-summary span { color: var(--muted); font-size: 13px; }
+.receipt-boundary { align-items: flex-start; border: 1px solid rgba(255,128,109,.55); display: flex; gap: 14px; margin-top: 4px; padding: 16px 18px; }
+.receipt-boundary.allow { border-color: rgba(121,216,209,.55); }
+.boundary-mark { border: 1px solid currentColor; border-radius: 50%; color: var(--red); flex: 0 0 auto; font-family: var(--font-mono); font-size: 11px; height: 24px; line-height: 22px; text-align: center; width: 24px; }
+.receipt-boundary.allow .boundary-mark { color: var(--cyan); }
+.receipt-boundary strong { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; }
+.receipt-boundary p { color: var(--muted); font-size: 12px; line-height: 1.5; margin: 6px 0 0; }
 .receipt-layout { display: grid; gap: 18px; grid-template-columns: minmax(0,1.1fr) minmax(240px,.9fr); margin-top: 20px; }
+.receipt-code-wrap { min-width: 0; }
+.receipt-code-label { color: var(--muted); font-family: var(--font-mono); font-size: 10px; letter-spacing: .13em; margin-bottom: 9px; text-transform: uppercase; }
 .receipt-code { background: #080a0a; border: 1px solid var(--line); color: #bdcebd; font-family: var(--font-mono); font-size: 11px; line-height: 1.7; margin: 0; overflow-x: auto; padding: 22px; }
 .receipt-side { align-content: start; display: grid; gap: 18px; }
 .receipt-card { background: var(--ink-soft); border: 1px solid var(--line); padding: 20px; }

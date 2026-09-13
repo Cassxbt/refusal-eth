@@ -85,6 +85,12 @@ export default function Home() {
               <a className="button-primary" href="#evaluate">Run a gate <span aria-hidden="true">↓</span></a>
               <a className="button-quiet" href="#evidence">Inspect the build <span aria-hidden="true">↘</span></a>
             </div>
+            <div className="hero-meta" aria-label="Judge shortcuts">
+              <span className="hero-meta-label">Judge in 60 sec</span>
+              <a href="#evidence">Evidence map ↘</a>
+              <a href="/api/health">Health JSON ↗</a>
+              <span className="hero-meta-note">No wallet required to inspect a refusal.</span>
+            </div>
           </div>
 
           <aside className="rail-card" aria-label="Decision rail">
@@ -125,9 +131,9 @@ export default function Home() {
             <div className="panel-head"><div><div className="panel-kicker">Judge path / evidence map</div><h2 className="panel-title" id="evidence-title">What is live today.</h2></div></div>
             <p className="evidence-intro">The console shows the current build honestly. Green means verifiable in this checkout; amber means the integration is not yet claimed as live.</p>
             <div className="evidence-list">
-              <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">GATE LOGIC</div><div className="evidence-detail">Frozen order: revoked → allowlist → per-tx → daily.</div></div><span className="evidence-state">VERIFIED</span></div>
-              <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">ENS PRE-FLIGHT</div><div className="evidence-detail">Canonical ENSv2 identity and fail-closed config checks.</div></div><span className="evidence-state">VERIFIED</span></div>
-              <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">CHAINLINK CRE</div><div className="evidence-detail">Official CLI simulation verified; production deployment is not claimed.</div></div><span className="evidence-state">VERIFIED</span></div>
+              <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">GATE LOGIC</div><div className="evidence-detail">Frozen order: revoked → allowlist → per-tx → daily.</div></div><span className="evidence-state">TESTED</span></div>
+              <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">ENS PRE-FLIGHT</div><div className="evidence-detail">Read-only ENSv2 deployment and fail-closed config checks; no name ownership implied.</div></div><span className="evidence-state readonly">READ-ONLY</span></div>
+              <div className="evidence-row"><span className="evidence-dot" /><div><div className="evidence-name">CHAINLINK CRE</div><div className="evidence-detail">Official CLI simulation verified; production deployment is not claimed.</div></div><span className="evidence-state simulation">SIMULATION</span></div>
               <div className="evidence-row"><span className="evidence-dot pending" /><div><div className="evidence-name">PRIVY LOCK-SIGN</div><div className="evidence-detail">SDK present; wallet policy and live signing flow pending.</div></div><span className="evidence-state pending">PENDING</span></div>
             </div>
             <p className="micro-note">The honest path is the winning path: every claim maps to a test, receipt, or clearly marked next gate.</p>

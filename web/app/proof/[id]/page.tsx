@@ -64,10 +64,21 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
           <span>{receipt.intent.amountUSDC} USDC · {receipt.intent.chain}</span>
         </div>
 
+        <div className={`receipt-boundary ${allowed ? "allow" : "refuse"}`} role="note">
+          <span className="boundary-mark" aria-hidden="true">{allowed ? "✓" : "×"}</span>
+          <div>
+            <strong>{allowed ? "ALLOW is a policy verdict, not a transaction." : "REFUSE means no transaction was called."}</strong>
+            <p>{allowed ? "This receipt authorizes review only. A downstream signer remains a separate, explicit gate." : "The gate stopped this intent before signing; this negative result is the expected proof."}</p>
+          </div>
+        </div>
+
         <div className="receipt-layout">
-          <pre className="receipt-code" aria-label="Receipt JSON">
-            {JSON.stringify(receipt, null, 2)}
-          </pre>
+          <div className="receipt-code-wrap">
+            <div className="receipt-code-label">Machine receipt / JSON</div>
+            <pre className="receipt-code" aria-label="Receipt JSON">
+              {JSON.stringify(receipt, null, 2)}
+            </pre>
+          </div>
 
           <aside className="receipt-side">
             <section className="receipt-card">
@@ -88,6 +99,8 @@ export default async function ProofPage({ params }: { params: Promise<{ id: stri
             <section className="receipt-card receipt-links">
               <h2>Verify externally</h2>
               <Link href={receipt.links.ensSepolia}>ENS Sepolia lookup ↗</Link>
+              <Link href={`/api/proof/${receipt.id}`}>Machine-readable receipt ↗</Link>
+              <Link href="/api/health">Capability health ↗</Link>
               {hasTx ? <Link href={receipt.links.explorerTxOrNull!}>Open transaction ↗</Link> : <p className="no-tx">No transaction: refusal leaves no funds movement.</p>}
             </section>
           </aside>
