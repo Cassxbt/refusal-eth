@@ -99,6 +99,19 @@ Optional configuration is supplied as environment variables:
 - `PRIVY_WALLET_DISPLAY_NAME` (default: `REFUSAL agent — Sepolia`)
 - `PRIVY_OWNER_ID` **or** `PRIVY_POLICY_ID` (attach an already-created Privy owner or policy)
 
+To create the controls from the local P-256 public key, run this separate,
+explicit one-time command before creating the wallet:
+
+```bash
+node web/scripts/privy-controls-bootstrap.mjs --create-key-quorum --create-policy
+```
+
+The command creates a threshold-1 owner quorum and an `eth_sendTransaction`
+policy limited to Sepolia (`11155111`) and the Sepolia USDC contract. It prints
+only the quorum and policy IDs. On later runs, set `PRIVY_KEY_QUORUM_ID` and
+`PRIVY_POLICY_ID` instead of passing the create flags; the script then validates
+that both resources still exist without creating duplicates.
+
 The command is idempotent: rerunning it returns the existing active wallet for
 the same external ID. It never signs, sends, exports, or moves funds. After it
 prints the wallet address, fund it with Sepolia ETH and USDC, then record the
@@ -107,3 +120,19 @@ Dashboard → Wallet infrastructure → Policies with default deny and an allow
 rule restricted to `eth_sendTransaction`, chain `11155111`, and the Sepolia
 USDC contract `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`; copy its policy ID
 before creating a new wallet if you want the policy attached at creation time.
+
+To fund the resulting wallet from a disposable Sepolia source, set the source
+key and destination address in the local environment and run the guarded
+transfer helper:
+
+```bash
+export SEPOLIA_FUNDER_PRIVATE_KEY='your-throwaway-key'
+export PRIVY_WALLET_ADDRESS='0x...'
+export FUND_AMOUNT_ETH='0.01'
+node web/scripts/fund-sepolia-wallet.mjs
+unset SEPOLIA_FUNDER_PRIVATE_KEY PRIVY_WALLET_ADDRESS FUND_AMOUNT_ETH
+```
+
+It verifies chain `11155111`, destination validity, source balance, and a gas
+reserve before submitting one native-ETH transfer, then waits for a successful
+receipt and prints the transaction hash.
