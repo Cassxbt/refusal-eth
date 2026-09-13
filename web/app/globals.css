@@ -115,8 +115,18 @@ button { cursor: pointer; }
 .receipt-card p { color: var(--muted); font-size: 12px; line-height: 1.55; margin: 0; }
 .receipt-card a { color: var(--acid); font-family: var(--font-mono); font-size: 10px; text-decoration: none; }
 .receipt-card a:hover { text-decoration: underline; }
+.receipt-facts { display: grid; gap: 12px; margin: 0; }
+.receipt-facts div { align-items: start; border-top: 1px solid var(--line); display: grid; gap: 12px; grid-template-columns: 92px 1fr; padding-top: 11px; }
+.receipt-facts dt { color: var(--muted); font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.receipt-facts dd { color: var(--paper); font-family: var(--font-mono); font-size: 10px; line-height: 1.45; margin: 0; overflow-wrap: anywhere; }
+.receipt-links { display: grid; gap: 11px; }
+.receipt-links h2 { margin-bottom: 4px; }
+.no-tx { border-top: 1px solid var(--line); padding-top: 11px; }
+.receipt-footer { align-items: center; border-top: 1px solid var(--line); color: var(--muted); display: flex; font-family: var(--font-mono); font-size: 10px; justify-content: space-between; letter-spacing: .06em; margin-top: 50px; padding-top: 20px; text-transform: uppercase; }
 .unknown { margin: 0 auto; max-width: 760px; padding: 80px 20px; }
 .unknown h1 { font-family: var(--font-display); font-size: 52px; font-weight: 400; letter-spacing: -.06em; }
+.unknown p { color: var(--muted); line-height: 1.6; margin: 0 0 26px; }
+.unknown code { color: var(--acid); font-family: var(--font-mono); font-size: .9em; }
 .sr-only { clip: rect(0,0,0,0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
 @media (max-width: 860px) { .hero, .console-grid, .receipt-layout { grid-template-columns: 1fr; } .rail-card { margin-top: 0; } .sequence { grid-template-columns: repeat(3,1fr); row-gap: 30px; } .sequence-step:nth-child(4) { border-left: 0; padding-left: 0; } }
 @media (max-width: 560px) { .topbar { padding: 18px 20px; } .brand-sub { display: none; } .main { padding-top: 42px; } .hero h1 { font-size: clamp(50px,19vw,88px); } .panel { padding: 21px; } .submit-row { align-items: flex-start; flex-direction: column; } .form-note { text-align: left; } .sequence { grid-template-columns: 1fr 1fr; } .sequence-step:nth-child(3) { border-left: 0; padding-left: 0; } .sequence-step:nth-child(4) { border-left: 1px solid var(--line); padding-left: 17px; } .footer { align-items: flex-start; flex-direction: column; gap: 10px; } .receipt-header { align-items: flex-start; flex-direction: column; } .receipt-id { text-align: left; } }
