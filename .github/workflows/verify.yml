@@ -18,6 +18,8 @@ jobs:
         with:
           version: 10.22.0
       - uses: foundry-rs/foundry-toolchain@v1
+      - name: Install configured Solidity compiler
+        run: forge build --root contracts --no-auto-detect
       - name: Install CRE workflow dependencies
         run: npm ci --prefix cre-workflow
       - name: Install web dependencies
