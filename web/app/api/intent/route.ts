@@ -4,6 +4,7 @@ import { sepolia } from "viem/chains";
 import { normalize } from "viem/ens";
 import { evaluatePolicyInEnclave } from "@/lib/gate";
 import { demoPolicy, isRevoked, newProofId, saveProof } from "@/lib/store";
+import { demoProofForIntent, DEMO_ENS } from "@/lib/demo-proof";
 import { parseStrictAddress, parseStrictAmount } from "@/lib/validation";
 
 const RPC = process.env.SEPOLIA_RPC_URL ?? "https://ethereum-sepolia-rpc.publicnode.com";
@@ -28,14 +29,19 @@ export async function POST(req: Request) {
   }
 
   const demoMode = new URL(req.url).searchParams.get("demo") === "true";
-  const isDemoIdentity = fromENS === "demo.alice.refusal.eth";
+  const isDemoIdentity = fromENS === DEMO_ENS;
   let address: `0x${string}` | null = null;
   let resolver: `0x${string}` | null = null;
   if (demoMode) {
     if (!isDemoIdentity)
-      return NextResponse.json({ error: "demo mode only supports demo.alice.refusal.eth" }, { status: 400 });
+      return NextResponse.json({ error: `demo mode only supports ${DEMO_ENS}` }, { status: 400 });
     // Synthetic identity for the public demo; no ENS ownership is implied.
     address = "0x000000000000000000000000000000000000a11c";
+    const demoReceipt = demoProofForIntent({ fromENS: fromENS, to, amountUSDC: amount });
+    if (!demoReceipt)
+      return NextResponse.json({ error: "demo mode only supports the published judge scenarios" }, { status: 400 });
+    saveProof(demoReceipt);
+    return NextResponse.json({ decision: demoReceipt.decision, reasonCode: demoReceipt.reasonCode, proofId: demoReceipt.id });
   } else {
     const client = createPublicClient({ chain: sepolia, transport: http(RPC) });
     try {

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { getProof } from "@/lib/store";
+import { demoProofById } from "@/lib/demo-proof";
 
 /// GET /proof/:id — human-readable receipt with an API fallback for serverless instances.
 export default async function ProofPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  let receipt = getProof(id);
+  let receipt = getProof(id) ?? demoProofById(id);
   if (!receipt) {
     const requestHeaders = await headers();
     const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
