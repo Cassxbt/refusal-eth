@@ -24,6 +24,7 @@ Ledger Key Ring: adapter interface-complete (`signer/ledger-ring.ts`), demo uses
 
 ## Judge path (≤90s, no wallet)
 ```bash
+curl https://refusal-eth.vercel.app/api/health
 curl "https://refusal-eth.vercel.app/api/resolve?name=demo.alice.refusal.eth"
 curl -X POST https://refusal-eth.vercel.app/api/intent -d '{"from":"demo.alice.refusal.eth","to":"0x000000000000000000000000000000000000dEaD","amount":"1000"}'
 # → {"decision":"REFUSE","reasonCode":"REF-02 SEALED_LIMIT_BREACH"} (allowlisted addr, over limit)
