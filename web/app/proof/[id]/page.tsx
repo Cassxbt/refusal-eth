@@ -1,10 +1,24 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { getProof } from "@/lib/store";
 
-/// GET /proof/:id — human-readable receipt from the same proof store as the API.
+/// GET /proof/:id — human-readable receipt with an API fallback for serverless instances.
 export default async function ProofPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const receipt = getProof(id);
+  let receipt = getProof(id);
+  if (!receipt) {
+    const requestHeaders = await headers();
+    const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
+    const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
+    if (host) {
+      try {
+        const response = await fetch(`${protocol}://${host}/api/proof/${encodeURIComponent(id)}`, { cache: "no-store" });
+        if (response.ok) receipt = await response.json();
+      } catch {
+        // Keep the receipt page fail-closed when the API instance is unavailable.
+      }
+    }
+  }
   if (!receipt) {
     return (
       <main className="unknown">
