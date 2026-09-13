@@ -1,0 +1,5 @@
+{
+  "schedule": "*/5 * * * *",
+  "intentUrl": "https://refusal-eth.vercel.app/api/cre/intent",
+  "policySecretId": "SEALED_POLICY"
+}

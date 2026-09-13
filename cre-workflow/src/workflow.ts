@@ -1,6 +1,6 @@
 /// REFUSAL.eth CRE workflow — confidential policy evaluation.
 /// Sensitive inputs (limits, allowlist) are processed inside the enclave via SDK `handlerInTee`.
-/// Pure logic lives in `evaluatePolicyInEnclave`; SDK wiring lands next.
+/// Pure logic lives in `evaluatePolicyInEnclave`; SDK wiring lives in `tee/`.
 
 export type Decision = "ALLOW" | "REFUSE";
 export type ReasonCode =
@@ -24,8 +24,9 @@ export interface Intent {
 }
 
 // evaluatePolicyInEnclave: pure gate logic that MUST run inside the enclave.
-// SDK wiring TODO: wrap with @chainlink/cre-sdk `handlerInTee(trigger, onTrigger, ...)`
-// + `runtime.getSecret()`. Do NOT export as `handlerInTee` (collides with SDK).
+// The production-shaped SDK wrapper in `tee/` supplies `runtime.getSecret()` and
+// invokes this function from the confidential `handlerInTee` callback. Do NOT
+// export this function as `handlerInTee` (collides with the SDK).
 // Gate order (frozen): REVOKED → ALLOWLIST → PER-TX → DAILY.
 // REF-04 HUMAN_DENIED_TIMEOUT is NOT an enclave verdict — it originates at the
 // LOCK-SIGN stage (Privy quorum/human approval timeout). Kept in the ReasonCode

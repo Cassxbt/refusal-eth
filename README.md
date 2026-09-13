@@ -52,7 +52,7 @@ Gate order (fixed): REVOKED → ALLOWLIST → PER-TX → DAILY. Non-allowlisted 
 |---|---|
 | Gateway verdict signature expiry/replay protection | LOCAL — legacy `execute` selector is disabled; use deadline+nonce-bound `executeWithDeadline` |
 | ENSv2 mint/revoke/alias Sepolia | TODO — needs Sepolia txs + `/api/resolve` live, no hard-coded values |
-| CRE `handlerInTee` + CLI sim log | LOCAL GATE ONLY — `cre-workflow/src/sim.ts` 4-case pass; needs real `cre workflow simulate` transcript + binary hash |
+| CRE `handlerInTee` + CLI sim log | VERIFIED — official `cre workflow simulate` transcript and binary/config hashes in [`evidence/chainlink-cre-simulation.md`](evidence/chainlink-cre-simulation.md); production deployment remains pending |
 | Privy embedded wallet + policy | TODO — needs funded Sepolia wallet + policy/quorum IDs + tx hash |
 | Ledger Ring scoped sign | ADAPTER PLANNED, demo uses Privy/local — no hardware for `ring init`, never faked as Ring tx |
 | LLM agent | Thin untrusted demo harness, labeled |
