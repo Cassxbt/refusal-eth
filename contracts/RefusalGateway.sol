@@ -51,14 +51,14 @@ contract RefusalGateway {
 
     event NameRevoked(bytes32 indexed nameHash, string agentENS);
 
-    /// @notice Execute only with a fresh ALLOW verdict signature over the intent hash.
-    /// @dev proofId binds agentENS+to+amount+chain+contract; single-use (replay-safe).
+    /// @notice Legacy selector retained for ABI compatibility but permanently disabled.
+    /// @dev Use executeWithDeadline so every accepted verdict expires and has a unique nonce.
     function execute(
         string calldata,
         address,
         uint256,
         bytes calldata
-    ) external pure returns (bytes32 proofId) {
+    ) external pure returns (bytes32) {
         // A signature without an expiry can remain valid forever. Keep the
         // selector for ABI compatibility, but disable the unsafe path before
         // deployment; callers must use executeWithDeadline instead.
