@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import "./globals.css";
 
-export const metadata: Metadata = { title: "REFUSAL.eth", description: "Deny-by-default firewall for AI agents" };
+export const metadata: Metadata = {
+  title: "REFUSAL.eth — policy before signing",
+  description: "A deny-by-default transaction gate for AI agent wallets.",
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, background: "#000", color: "#eee" }}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
